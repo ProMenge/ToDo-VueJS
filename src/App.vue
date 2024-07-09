@@ -1,29 +1,19 @@
 <script setup>
-
 import { reactive } from 'vue';
+import TaskHeader from './components/TaskHeader.vue';
+import Form from './components/Form.vue';
+import TaskList from './components/TaskList.vue';
+
 
 const state = reactive({
   filter: "All Tasks",
   taskTemp: '',
   tasks: [
-    {
-      title: 'Study ES6+',
-      finished: false,
-    },
-    {
-      title: 'Study SASS',
-      finished: true,
-    },
-    {
-      title: 'Study ReactJS',
-      finished: false,
-    }
+
   ]
 })
 
-const accessFilter = (event) => { state.filter = event.target.value }
-
-
+const changeFilter = (event) => { state.filter = event.target.value }
 
 const getTaskToDo = () => {
   return state.tasks.filter(task => !task.finished)
@@ -54,6 +44,26 @@ const registerTask = () => {
 
 }
 
+const editTaskTemp = (event) => {
+
+  state.taskTemp = event.target.value
+}
+
+const allTasksFinished = () => {
+  return state.filter === 'toDo' && getTaskToDo().length === 0;
+}
+
+const isTaskListEmpty = () => {
+  return state.tasks.length === 0;
+};
+
+const removeTask = (task) => {
+  const index = state.tasks.indexOf(task);
+  if (index > -1) {
+    state.tasks.splice(index, 1);
+  }
+}
+
 // const verifyCheckedTask = (event) => { task.finished = event.target.checked }
 
 </script>
@@ -61,49 +71,10 @@ const registerTask = () => {
 <template>
 
   <div class="container">
-
-    <header class="p-5 mb-4 mt-4 bg-light rounded-3">
-      <h1>
-        My Tasks
-      </h1>
-      <p>
-        You have {{ getTaskToDo().length }} tasks to do
-      </p>
-    </header>
-
-    <form @submit.prevent="registerTask">
-      <div class="row">
-        <div class="col">
-          <input :value="state.taskTemp" @change="event => state.taskTemp = event.target.value" required type="text"
-            placeholder="Insert here your task!" class="form-control">
-        </div>
-        <div class="col-md-2">
-          <button type="submit" class="btn btn-primary">Register</button>
-        </div>
-        <div class="col-md-2">
-          <select @change="accessFilter" name="" id="" class="form-control">
-            <option value="all">All Tasks</option>
-            <option value="toDo">Tasks To Do</option>
-            <option value="finished">Finished</option>
-          </select>
-        </div>
-      </div>
-    </form>
-
-    <ul class="list-group mt-4">
-      <li class="list-group-item" v-for="task in getFilteredTasks()">
-        <input @change="event => task.finished = event.target.checked" :checked="task.finished" :id="task.title"
-          type="checkbox">
-        <label :class="{ done: task.finished }" class="ms-3" :for="task.title">
-          {{ task.title }}
-        </label>
-      </li>
-    </ul>
+    <TaskHeader :tasks-to-do="getTaskToDo().length" />
+    <Form :task-temp="state.taskTemp" :edit-task-temp="editTaskTemp" :register-task="registerTask"
+      :change-filter="changeFilter" />
+    <TaskList :get-filtered-tasks="getFilteredTasks()" :all-tasks-finished="allTasksFinished()"
+      :is-task-list-empty="isTaskListEmpty()" :remove-task="removeTask" />
   </div>
 </template>
-
-<style scoped>
-.done {
-  text-decoration: line-through;
-}
-</style>
