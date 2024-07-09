@@ -4,6 +4,7 @@ import { reactive } from 'vue';
 
 const state = reactive({
   filter: "All Tasks",
+  taskTemp: '',
   tasks: [
     {
       title: 'Study ES6+',
@@ -21,6 +22,8 @@ const state = reactive({
 })
 
 const accessFilter = (event) => { state.filter = event.target.value }
+
+
 
 const getTaskToDo = () => {
   return state.tasks.filter(task => !task.finished)
@@ -41,10 +44,24 @@ const getFilteredTasks = () => {
   }
 }
 
+const registerTask = () => {
+  const newTask = {
+    title: state.taskTemp,
+    finished: false,
+  }
+  state.tasks.push(newTask)
+  state.taskTemp = ''
+
+}
+
+// const verifyCheckedTask = (event) => { task.finished = event.target.checked }
+
 </script>
 
 <template>
+
   <div class="container">
+
     <header class="p-5 mb-4 mt-4 bg-light rounded-3">
       <h1>
         My Tasks
@@ -53,10 +70,12 @@ const getFilteredTasks = () => {
         You have {{ getTaskToDo().length }} tasks to do
       </p>
     </header>
-    <form action="">
+
+    <form @submit.prevent="registerTask">
       <div class="row">
         <div class="col">
-          <input type="text" placeholder="Insert here your task!" class="form-control">
+          <input :value="state.taskTemp" @change="event => state.taskTemp = event.target.value" required type="text"
+            placeholder="Insert here your task!" class="form-control">
         </div>
         <div class="col-md-2">
           <button type="submit" class="btn btn-primary">Register</button>
@@ -73,7 +92,8 @@ const getFilteredTasks = () => {
 
     <ul class="list-group mt-4">
       <li class="list-group-item" v-for="task in getFilteredTasks()">
-        <input :checked="task.finished" :id="task.title" type="checkbox">
+        <input @change="event => task.finished = event.target.checked" :checked="task.finished" :id="task.title"
+          type="checkbox">
         <label :class="{ done: task.finished }" class="ms-3" :for="task.title">
           {{ task.title }}
         </label>
