@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import TaskHeader from './components/TaskHeader.vue';
 import Form from './components/Form.vue';
 import TaskList from './components/TaskList.vue';
@@ -64,6 +64,10 @@ const removeTask = (task) => {
   }
 }
 
+const finishedTaskToFinal = computed(() => {
+  return state.tasks.slice().sort((a,b) => a.finished - b.finished)
+
+});
 // const verifyCheckedTask = (event) => { task.finished = event.target.checked }
 
 </script>
@@ -75,7 +79,7 @@ const removeTask = (task) => {
     <Form :task-temp="state.taskTemp" :edit-task-temp="editTaskTemp" :register-task="registerTask"
       :change-filter="changeFilter" />
     <TaskList :get-filtered-tasks="getFilteredTasks()" :all-tasks-finished="allTasksFinished()"
-      :is-task-list-empty="isTaskListEmpty()" :remove-task="removeTask" />
+      :is-task-list-empty="isTaskListEmpty()" :remove-task="removeTask" :finished-task-to-final="finishedTaskToFinal"/>
   </div>
 </template>
 

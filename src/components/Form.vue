@@ -25,7 +25,7 @@ const props = defineProps(['registerTask', 'taskTemp', 'changeFilter', 'editTask
 
 <style scoped>
 
-     .formBackgroundColor{
+     .formBackgroundColor, input:focus{
           background-color: #1e1e1e;
           border-color: #858585
      }
@@ -37,7 +37,4 @@ const props = defineProps(['registerTask', 'taskTemp', 'changeFilter', 'editTask
      .buttonPrimary{
           background-color: #2e6129;
      }
-
-
-
 </style>
