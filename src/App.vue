@@ -50,7 +50,7 @@ const editTaskTemp = (event) => {
 }
 
 const allTasksFinished = () => {
-  return state.filter === 'toDo' && getTaskToDo().length === 0;
+  return state.filter === 'toDo' && getTaskToDo().length === 0 && state.tasks.length >= 1;
 }
 
 const isTaskListEmpty = () => {
@@ -78,3 +78,4 @@ const removeTask = (task) => {
       :is-task-list-empty="isTaskListEmpty()" :remove-task="removeTask" />
   </div>
 </template>
+
